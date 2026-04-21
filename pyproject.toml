@@ -1,0 +1,18 @@
+[project]
+name = "baby"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "av>=16.1.0",
+    "flask>=3.1.3",
+    "numpy>=2.2.6",
+    "opencv-python>=4.13.0.92",
+    "streamlit>=1.56.0",
+    "streamlit-webrtc>=0.64.5",
+    # AI/ML 相关依赖
+    "ultralytics>=8.3.0",       # YOLO 模型（目标检测、姿态估计）
+    "onnxruntime<=1.16.3",      # ONNX 模型推理（Python 3.10 兼容版本）
+    "Pillow>=10.0.0",           # 图像处理
+]

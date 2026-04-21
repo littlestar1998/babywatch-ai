@@ -1,0 +1,36 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info/
+
+# Virtual environments
+.venv/
+
+# Model files (large binaries)
+models/**/*.engine
+models/**/*.onnx
+models/**/*.pt
+models/**/*.pth
+models/**/*.plan
+models/**/*.tflite
+
+# Test media files
+test_media/**/*.jpg
+test_media/**/*.jpeg
+test_media/**/*.png
+test_media/**/*.bmp
+test_media/**/*.mp4
+test_media/**/*.avi
+test_media/**/*.wav
+test_media/**/*.mp3
+test_media/**/*.ogg
+
+# Claude local config
+.claude/
+
+# Streamlit secrets
+.secrets/
+.streamlit/secrets.toml
