@@ -7,7 +7,7 @@ from pathlib import Path
 from datetime import datetime
 
 import sys
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from core.model_registry import ModelRegistry, ModelType, ModelFormat, ModelMetadata
 
@@ -30,11 +30,11 @@ def main():
     col_upload, col_list = st.columns([1, 2])
 
     with col_upload:
-        st.subheader("📤 上传模型")
+        st.subheader("上传模型")
         render_upload_section()
 
     with col_list:
-        st.subheader("📋 已上传模型")
+        st.subheader("已上传模型")
         render_model_list()
 
 

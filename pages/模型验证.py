@@ -9,7 +9,7 @@ import cv2
 from PIL import Image
 
 import sys
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from core.model_registry import ModelRegistry, ModelType, ModelFormat, ModelMetadata
 from core.model_loader import ModelLoader
