@@ -26,22 +26,6 @@ def load_model_cached(model_path: str, model_format: ModelFormat, model_type: Mo
     return ModelLoader.load(model_path, model_format, model_type)
 
 
-st.title("模型验证")
-
-col_select, col_test = st.columns([1, 2])
-
-with col_select:
-    st.subheader("选择模型")
-    selected_model = render_model_selector()
-
-with col_test:
-    if selected_model:
-        st.subheader("测试推理")
-        render_test_section(selected_model)
-    else:
-        st.info("请先选择一个模型")
-
-
 def render_model_selector():
     """模型选择器"""
     registry = get_registry()
@@ -280,3 +264,20 @@ def render_classification_result(result: InferenceResult):
         st.metric("预测类别", f"类别 {top_class}", f"{confidence:.2%}")
     else:
         st.warning("无法分类")
+
+
+# 页面内容（函数定义之后）
+st.title("模型验证")
+
+col_select, col_test = st.columns([1, 2])
+
+with col_select:
+    st.subheader("选择模型")
+    selected_model = render_model_selector()
+
+with col_test:
+    if selected_model:
+        st.subheader("测试推理")
+        render_test_section(selected_model)
+    else:
+        st.info("请先选择一个模型")

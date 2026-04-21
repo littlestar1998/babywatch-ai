@@ -17,19 +17,6 @@ def get_registry():
     return ModelRegistry()
 
 
-st.title("模型管理")
-
-col_upload, col_list = st.columns([1, 2])
-
-with col_upload:
-    st.subheader("上传模型")
-    render_upload_section()
-
-with col_list:
-    st.subheader("已上传模型")
-    render_model_list()
-
-
 def render_upload_section():
     """上传区域"""
 
@@ -66,7 +53,7 @@ def render_upload_section():
         if st.button("上传", type="primary"):
             success = save_model(uploaded_file, model_name, model_type, description)
             if success:
-                st.success(f"✅ '{model_name}' 上传成功")
+                st.success("'{}' 上传成功".format(model_name))
                 st.rerun()
 
 
@@ -77,7 +64,7 @@ def save_model(uploaded_file, model_name: str, model_type: ModelType, descriptio
     model_dir = Path("models") / model_type.name.lower()
     model_dir.mkdir(parents=True, exist_ok=True)
 
-    model_id = f"{model_type.name.lower()}_{int(datetime.now().timestamp())}"
+    model_id = "{}_{}".format(model_type.name.lower(), int(datetime.now().timestamp()))
 
     suffix = Path(uploaded_file.name).suffix.lower()
     model_format = {
@@ -89,7 +76,7 @@ def save_model(uploaded_file, model_name: str, model_type: ModelType, descriptio
         '.tflite': ModelFormat.TFLITE,
     }.get(suffix, ModelFormat.PYTORCH)
 
-    file_path = model_dir / f"{model_id}{suffix}"
+    file_path = model_dir / "{}{}".format(model_id, suffix)
     with open(file_path, 'wb') as f:
         f.write(uploaded_file.getbuffer())
 
@@ -125,7 +112,7 @@ def render_model_list():
         models_by_type[model.model_type].append(model)
 
     for model_type, type_models in models_by_type.items():
-        with st.expander(f"{model_type.value} ({len(type_models)})"):
+        with st.expander("{} ({})".format(model_type.value, len(type_models))):
             for model in type_models:
                 render_model_card(model)
 
@@ -135,14 +122,14 @@ def render_model_card(model: ModelMetadata):
     col_name, col_info, col_btn = st.columns([2, 2, 1])
 
     with col_name:
-        st.markdown(f"**{model.name}**")
-        st.caption(f"ID: `{model.model_id}`")
+        st.markdown("**{}**".format(model.name))
+        st.caption("ID: `{}`".format(model.model_id))
 
     with col_info:
-        st.caption(f"{model.model_format.value.split()[0]} | {model.file_size/(1024*1024):.1f} MB")
+        st.caption("{} | {:.1f} MB".format(model.model_format.value.split()[0], model.file_size/(1024*1024)))
 
     with col_btn:
-        if st.button("删除", key=f"del_{model.model_id}"):
+        if st.button("删除", key="del_{}".format(model.model_id)):
             delete_model(model)
             st.rerun()
 
@@ -159,3 +146,17 @@ def delete_model(model: ModelMetadata) -> bool:
     if file_path.exists():
         file_path.unlink()
     return registry.unregister(model.model_id)
+
+
+# 页面内容（函数定义之后）
+st.title("模型管理")
+
+col_upload, col_list = st.columns([1, 2])
+
+with col_upload:
+    st.subheader("上传模型")
+    render_upload_section()
+
+with col_list:
+    st.subheader("已上传模型")
+    render_model_list()
