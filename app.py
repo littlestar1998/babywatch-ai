@@ -4,64 +4,40 @@
 
 import streamlit as st
 from pathlib import Path
-import sys
 
-sys.path.insert(0, str(Path(__file__).parent))
+# 定义页面结构（二级菜单）
+pages = {
+    "模型": [
+        st.Page("pages/模型管理.py", title="模型管理"),
+        st.Page("pages/模型验证.py", title="模型验证"),
+    ],
+    "设备": [
+        st.Page("pages/设备状态.py", title="设备状态"),
+    ],
+}
 
-from core.model_registry import ModelRegistry
-
-# 页面配置
+# 页面配置 + 导航
 st.set_page_config(
     page_title="宝宝监护器",
     page_icon="👶",
     layout="wide",
-    initial_sidebar_state="expanded"
 )
 
-
-@st.cache_resource
-def get_registry():
-    return ModelRegistry()
+page = st.navigation(pages, position="sidebar", expanded=True)
 
 
-def main():
-    col_main, col_side = st.columns([3, 1])
+# 主页内容
+if page is None or st.session_state.get("_current_page") == "app.py":
+    st.title("👶 宝宝监护器")
+    st.markdown("""
+    ### 智能 AI 守护宝宝安全
 
-    with col_main:
-        st.title("👶 宝宝监护器")
-        st.markdown("""
-        ### 智能 AI 守护宝宝安全
-
-        运行在 **Jetson Orin Nano** 上的智能宝宝监护系统，
-        利用 AI 技术实时监测宝宝状态，提供全方位的安全守护。
-        """)
-
-        st.markdown("---")
-        render_features_overview()
-
-    with col_side:
-        render_home_side_panel()
-
-
-def render_home_side_panel():
-    registry = get_registry()
-    models = registry.list_all()
-
-    st.markdown("### 📌 概览")
-    st.metric("模型数量", registry.count())
-
-    if models:
-        counts = registry.count_by_type()
-        for type_name, count in counts.items():
-            st.caption(f"{type_name}: {count} 个")
-
-        total_size = sum(m.file_size for m in models) / (1024 * 1024)
-        st.caption(f"存储占用: {total_size:.1f} MB")
-    else:
-        st.info("暂无模型")
+    运行在 **Jetson Orin Nano** 上的智能宝宝监护系统，
+    利用 AI 技术实时监测宝宝状态，提供全方位的安全守护。
+    """)
 
     st.markdown("---")
-    st.caption("使用侧边栏导航到各功能页面")
+    render_features_overview()
 
 
 def render_features_overview():
@@ -93,5 +69,5 @@ def render_features_overview():
             )
 
 
-if __name__ == "__main__":
-    main()
+# 运行当前页面
+page.run()

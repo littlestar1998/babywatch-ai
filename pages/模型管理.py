@@ -11,31 +11,23 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from core.model_registry import ModelRegistry, ModelType, ModelFormat, ModelMetadata
 
-# 页面配置
-st.set_page_config(
-    page_title="模型管理 - 宝宝监护器",
-    layout="wide"
-)
-
 
 @st.cache_resource
 def get_registry():
     return ModelRegistry()
 
 
+st.title("模型管理")
 
-def main():
-    st.title("模型管理")
+col_upload, col_list = st.columns([1, 2])
 
-    col_upload, col_list = st.columns([1, 2])
+with col_upload:
+    st.subheader("上传模型")
+    render_upload_section()
 
-    with col_upload:
-        st.subheader("上传模型")
-        render_upload_section()
-
-    with col_list:
-        st.subheader("已上传模型")
-        render_model_list()
+with col_list:
+    st.subheader("已上传模型")
+    render_model_list()
 
 
 def render_upload_section():
@@ -167,7 +159,3 @@ def delete_model(model: ModelMetadata) -> bool:
     if file_path.exists():
         file_path.unlink()
     return registry.unregister(model.model_id)
-
-
-if __name__ == "__main__":
-    main()

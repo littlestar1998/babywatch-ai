@@ -15,12 +15,6 @@ from core.model_registry import ModelRegistry, ModelType, ModelFormat, ModelMeta
 from core.model_loader import ModelLoader
 from core.inference_engine import InferenceEngine, InferenceResult
 
-# 页面配置
-st.set_page_config(
-    page_title="模型验证 - 宝宝监护器",
-    layout="wide"
-)
-
 
 @st.cache_resource
 def get_registry():
@@ -32,22 +26,20 @@ def load_model_cached(model_path: str, model_format: ModelFormat, model_type: Mo
     return ModelLoader.load(model_path, model_format, model_type)
 
 
+st.title("模型验证")
 
-def main():
-    st.title("模型验证")
+col_select, col_test = st.columns([1, 2])
 
-    col_select, col_test = st.columns([1, 2])
+with col_select:
+    st.subheader("选择模型")
+    selected_model = render_model_selector()
 
-    with col_select:
-        st.subheader("选择模型")
-        selected_model = render_model_selector()
-
-    with col_test:
-        if selected_model:
-            st.subheader("测试推理")
-            render_test_section(selected_model)
-        else:
-            st.info("请先选择一个模型")
+with col_test:
+    if selected_model:
+        st.subheader("测试推理")
+        render_test_section(selected_model)
+    else:
+        st.info("请先选择一个模型")
 
 
 def render_model_selector():
@@ -176,11 +168,11 @@ def render_result(model: ModelMetadata, test_media: dict, result: InferenceResul
 
     # 性能评估
     if result.total_time_ms < 50:
-        st.success("🚀 优秀，适合实时应用")
+        st.success("优秀，适合实时应用")
     elif result.total_time_ms < 100:
-        st.info("✅ 良好")
+        st.info("良好")
     elif result.total_time_ms < 200:
-        st.warning("⚠️ 较慢，建议 TensorRT")
+        st.warning("较慢，建议 TensorRT")
     else:
         st.error("过慢，不适合实时")
 
@@ -288,7 +280,3 @@ def render_classification_result(result: InferenceResult):
         st.metric("预测类别", f"类别 {top_class}", f"{confidence:.2%}")
     else:
         st.warning("无法分类")
-
-
-if __name__ == "__main__":
-    main()

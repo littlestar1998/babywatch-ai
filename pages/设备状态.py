@@ -11,28 +11,21 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from core.model_registry import ModelRegistry
 from core.gpu_monitor import GPUMonitor
 
-# 页面配置
-st.set_page_config(
-    page_title="设备状态 - 宝宝监护器",
-    layout="wide"
-)
-
 
 @st.cache_resource
 def get_registry():
     return ModelRegistry()
 
 
-def main():
-    st.title("设备状态")
+st.title("设备状态")
 
-    col_left, col_right = st.columns([3, 2])
+col_left, col_right = st.columns([3, 2])
 
-    with col_left:
-        render_device_and_gpu_status()
+with col_left:
+    render_device_and_gpu_status()
 
-    with col_right:
-        render_model_monitor_panel()
+with col_right:
+    render_model_monitor_panel()
 
 
 def render_device_and_gpu_status():
@@ -69,7 +62,7 @@ def render_device_and_gpu_status():
     with metric3:
         st.metric("GPU利用率", f"{gpu_info.gpu_utilization:.0f}%")
     with metric4:
-        st.metric("温度", f"{gpu_info.temperature:.0f}°C" if gpu_info.temperature else "--")
+        st.metric("温度", f"{gpu_info.temperature:.0f}C" if gpu_info.temperature else "--")
 
     if gpu_info.memory_total_mb > 0:
         st.markdown("**显存占用**")
@@ -114,8 +107,3 @@ def render_model_monitor_panel():
         st.caption(f"格式: {latest_model.model_format.value}")
     else:
         st.caption("最近上传: --")
-
-    
-
-if __name__ == "__main__":
-    main()
