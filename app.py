@@ -3,32 +3,11 @@
 """
 
 import streamlit as st
-from pathlib import Path
-
-# 定义页面结构（二级菜单）
-pages = {
-    "模型": [
-        st.Page("pages/模型管理.py", title="模型管理"),
-        st.Page("pages/模型验证.py", title="模型验证"),
-    ],
-    "设备": [
-        st.Page("pages/设备状态.py", title="设备状态"),
-    ],
-}
-
-# 页面配置 + 导航
-st.set_page_config(
-    page_title="宝宝监护器",
-    page_icon="👶",
-    layout="wide",
-)
-
-page = st.navigation(pages, position="sidebar", expanded=True)
 
 
-# 主页内容
-if page is None or st.session_state.get("_current_page") == "app.py":
-    st.title("👶 宝宝监护器")
+def render_home():
+    """主页内容"""
+    st.title("宝宝监护器")
     st.markdown("""
     ### 智能 AI 守护宝宝安全
 
@@ -41,7 +20,7 @@ if page is None or st.session_state.get("_current_page") == "app.py":
 
 
 def render_features_overview():
-    st.markdown("### 🎯 核心功能")
+    st.markdown("### 核心功能")
 
     features = [
         {"icon": "😴", "name": "睡眠检测", "desc": "监测宝宝睡眠状态"},
@@ -69,5 +48,27 @@ def render_features_overview():
             )
 
 
-# 运行当前页面
+# 页面配置
+st.set_page_config(
+    page_title="宝宝监护器",
+    page_icon=":baby:",
+    layout="wide",
+)
+
+# 定义页面结构（二级菜单）
+home_page = st.Page(render_home, title="首页", default=True)
+
+pages = {
+    "": [home_page],  # 首页放在顶层
+    "模型": [
+        st.Page("pages/模型管理.py", title="模型管理"),
+        st.Page("pages/模型验证.py", title="模型验证"),
+    ],
+    "设备": [
+        st.Page("pages/设备状态.py", title="设备状态"),
+    ],
+}
+
+# 导航
+page = st.navigation(pages, position="sidebar", expanded=True)
 page.run()
